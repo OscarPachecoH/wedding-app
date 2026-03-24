@@ -1,5 +1,5 @@
 .navbar{
-    background-color: #d99561;
+    background-color: #0f7115;
 }
 
 .navbar-brand, .nav-link, .dropdown-item, .dropdown-menu{
@@ -7,13 +7,13 @@
 }
 
 .navbar-brand:hover, .nav-link:hover, .nav-link:active, .nav-link:focus{
-    color: #eed5b5;
+    color: #6fb874;
 }
 
 .dropdown-menu{
-    background-color: #d99561;
+    background-color: #0f7115;
 }
 
 .dropdown-item:hover{
-    background-color: #eed5b5;
+    background-color: #749f77;
 }

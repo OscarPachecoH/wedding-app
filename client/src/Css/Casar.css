@@ -1,3 +1,7 @@
+.title{
+    color: #fff;
+}
+
 .pareja-container{
     display: flex;
     justify-content: center;
@@ -6,7 +10,7 @@
 }
 
 .form-box-casar{
-    background: #f1d886;
+    background: #c945da3d;
     display: flex;
     justify-content: center;
     min-height: 170px;
@@ -106,4 +110,8 @@
     -webkit-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
     -moz-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
     box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+}
+
+.title-notFound {
+    color: #fff;
 }

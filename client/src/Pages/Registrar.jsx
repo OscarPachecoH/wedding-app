@@ -98,10 +98,12 @@ const Registrar = ({ user, setUser }) => {
                         <div class="input-group">
                             <span class="icon"><HiOutlineIdentification /></span>
                             <input
-                                type="text"
+                                type="number"
                                 id="edad"
                                 placeholder="Edad"
                                 name="edad"
+                                min={18}
+                                max={99}
                                 value={registro.edad}
                                 onChange={inputRegisterChange}
                             />

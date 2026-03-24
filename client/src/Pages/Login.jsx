@@ -28,21 +28,52 @@ const Login = ({ setUser }) => {
         if (sesion.user !== '' && sesion.password !== '') {
 
             await axios.post('http://localhost:9000/inicio', sesion)
-            .then(({ data }) => {
-                if (data.user === "") {
-                    alert("No hay registro con este usuario")
-                } else {
-                    setUser(data);
-                    //alert();
-                    navigate('/dashboard');
-                }
-            })
+                .then(({ data }) => {
+                    if (data.user === "") {
+                        alert("No hay registro con este usuario")
+                    } else {
+                        setUser(data);
+                        //alert();
+                        navigate('/dashboard');
+                    }
+                })
         } else {
             alert('Error... Los campos estan vacios');
         }
     }
 
     return (
+        <div className="body">
+            <div className="login-box">
+                <img src="https://cdn-icons-png.flaticon.com/512/13367/13367664.png" className="avatar" width={'250px'} alt="Iglesia" />
+                <h1>Inicio de sesión</h1>
+                <form onSubmit={inicio}>
+                    <label htmlFor="">Usuario</label>
+                    <input 
+                        type="text" 
+                        placeholder="Ingresa la contraseña" 
+                        id="user"
+                        name="user"
+                        value={sesion.user}
+                        onChange={inputSesionChange}
+                    />
+                    <label htmlFor="">Contraseña</label>
+                    <input 
+                        type="password" 
+                        placeholder="Ingresa la contraseña" 
+                        id="contraseña"
+                        name="password"
+                        value={sesion.password}
+                        onChange={inputSesionChange}
+                    />
+                    <input type="submit" value="log in" />
+                    <p>Si no tienes cuenta, contacta con el administrador</p>
+                </form>
+            </div>
+        </div>
+    );
+
+    /*return (
         <div className="body">
             <div className="container-fluid">
                 <div className="row">
@@ -92,7 +123,8 @@ const Login = ({ setUser }) => {
                 </div>
             </div>
         </div>
-    );
+    );*/
+
 }
 
 export default Login;

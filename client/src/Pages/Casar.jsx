@@ -81,7 +81,7 @@ const Casar = ({ user, setUser }) => {
                 <div className="col-lg-12 col-md-50 form-box-casar text-center">
                     <form onSubmit={buscar}>
                         <div className="heading mb-3">
-                            <h1>Buscar pareja</h1>
+                            <h1 className="title">Buscar pareja</h1>
                         </div>
                         <div className="form-input-casar">
                             <span><FaFemale /></span>
@@ -146,7 +146,7 @@ const Casar = ({ user, setUser }) => {
                             )}
                         </>
                     ) : (
-                        <h1>No se ha realizado una búsqueda</h1>
+                        <h1 className="title-notFound">No se ha realizado una búsqueda</h1>
                     )}
                 </div>
             </div>
