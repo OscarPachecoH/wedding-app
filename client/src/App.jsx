@@ -5,11 +5,15 @@ import Login from './Pages/Login';
 import Dashboard from './Pages/Dashboard';
 import Casar from './Pages/Casar';
 import Registrar from './Pages/Registrar';
+import RegistrarUser from './Pages/RegistrarUser';
 import Navbar from './Components/Navbar';
 
 function App() {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   return (
     <BrowserRouter>
@@ -36,6 +40,11 @@ function App() {
             <Registrar user={user} setUser={setUser}/>
           </ProtectedRouter>
         }/>
+        <Route path='/registrar_usuario' element={
+          <ProtectedRouter user={user} alloweRoles={['ADMIN']}>
+            <RegistrarUser user={user} setUser={setUser} />
+          </ProtectedRouter>
+        } />
         <Route path='*' element={<div><h1>Page Not Foud</h1></div>} />
       </Routes>
     </BrowserRouter>

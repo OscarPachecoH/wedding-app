@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-03-2026 a las 19:35:51
+-- Tiempo de generación: 15-05-2026 a las 01:20:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,35 +24,17 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `admins`
+-- Estructura de tabla para la tabla `matrimonios`
 --
 
-CREATE TABLE `admins` (
-  `idUser` int(11) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `apellidos` varchar(50) NOT NULL,
-  `user` varchar(10) NOT NULL,
-  `password` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `admins`
---
-
-INSERT INTO `admins` (`idUser`, `nombre`, `apellidos`, `user`, `password`) VALUES
-(1, 'Oscar', 'Pacheco', '@admin1', 'demo1234');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `parejas`
---
-
-CREATE TABLE `parejas` (
-  `idPareja` int(11) NOT NULL,
-  `idEsposo` int(11) NOT NULL,
-  `idEsposa` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `matrimonios` (
+  `id` int(11) NOT NULL,
+  `persona_1_id` int(11) NOT NULL,
+  `persona_2_id` int(11) NOT NULL,
+  `fecha_matrimonio` date NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ;
 
 -- --------------------------------------------------------
 
@@ -62,73 +44,115 @@ CREATE TABLE `parejas` (
 
 CREATE TABLE `personas` (
   `id` int(11) NOT NULL,
-  `CURP` varchar(18) NOT NULL,
+  `CURP` varchar(50) NOT NULL,
   `nombre` varchar(30) NOT NULL,
-  `apellidoP` varchar(30) NOT NULL,
-  `apellidoM` varchar(30) NOT NULL,
+  `apellidoPaterno` varchar(30) NOT NULL,
+  `apellidoMaterno` varchar(30) NOT NULL,
   `edad` int(11) NOT NULL,
-  `fecha` date NOT NULL,
-  `sexo` varchar(10) NOT NULL,
-  `estadoCivil` varchar(10) NOT NULL
+  `sexo` enum('HOMBRE','MUJER') NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `estadoCivil` enum('SOLTERO','CASADO') NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `lastname` varchar(30) NOT NULL,
+  `username` varchar(15) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('ADMIN','USER') NOT NULL DEFAULT 'USER',
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+-- Puedes cambiarlo antes de exportar la base de datos
+-- Ojo: ten cuidado con el apartado de contraseña
+--
+
+INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `password`, `role`, `created_at`) VALUES
+(1, 'Admin', 'Prueba', '@admin1', '$2b$10$cMSFjk8P4TDSeJwo5MiLVupE3RB17Y7kT3Vi23qKh7ISgvN/iGvXe', 'ADMIN', '2026-05-04 13:56:30');
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `admins`
+-- Indices de la tabla `matrimonios`
 --
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`idUser`),
-  ADD UNIQUE KEY `user` (`user`);
-
---
--- Indices de la tabla `parejas`
---
-ALTER TABLE `parejas`
-  ADD PRIMARY KEY (`idPareja`),
-  ADD KEY `idEsposo` (`idEsposo`),
-  ADD KEY `idEsposa` (`idEsposa`);
+ALTER TABLE `matrimonios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `persona_1_id` (`persona_1_id`),
+  ADD KEY `persona_2_id` (`persona_2_id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Indices de la tabla `personas`
 --
 ALTER TABLE `personas`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `curp` (`CURP`),
+  ADD KEY `created_by` (`created_by`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `admins`
+-- AUTO_INCREMENT de la tabla `matrimonios`
 --
-ALTER TABLE `admins`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `parejas`
---
-ALTER TABLE `parejas`
-  MODIFY `idPareja` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `matrimonios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `parejas`
+-- Filtros para la tabla `matrimonios`
 --
-ALTER TABLE `parejas`
-  ADD CONSTRAINT `parejas_ibfk_1` FOREIGN KEY (`idEsposo`) REFERENCES `personas` (`id`),
-  ADD CONSTRAINT `parejas_ibfk_2` FOREIGN KEY (`idEsposa`) REFERENCES `personas` (`id`);
+ALTER TABLE `matrimonios`
+  ADD CONSTRAINT `matrimonios_ibfk_1` FOREIGN KEY (`persona_1_id`) REFERENCES `personas` (`id`),
+  ADD CONSTRAINT `matrimonios_ibfk_2` FOREIGN KEY (`persona_2_id`) REFERENCES `personas` (`id`),
+  ADD CONSTRAINT `matrimonios_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`);
+
+--
+-- Filtros para la tabla `personas`
+--
+ALTER TABLE `personas`
+  ADD CONSTRAINT `personas_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

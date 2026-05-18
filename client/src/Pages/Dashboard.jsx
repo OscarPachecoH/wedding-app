@@ -33,47 +33,66 @@ const Dashboard = ({ user, setUser }) => {
         <>
             {
                 loading ? <Load /> :
-                    <div className="body">
+                    <div className="dashboard-page">
                         <Navbar user={user} setUser={setUser} />
-                        <h1>Bienvenido {user.nombre + " " + user.apellidos}</h1>
                         
-                        {personas.length > 0 ? (
-                            <div className="tabla">
-                                <table className="table table-bordered bordered-info">
-                                    <thead className="table-info">
-                                        <tr>
-                                            <th className="titulo-tabla" colSpan={7}>REGISTRO</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>CURP</th>
-                                            <th>Nombre</th>
-                                            <th>Apellido Paterno</th>
-                                            <th>Apellido Materno</th>
-                                            <th>Sexo</th>
-                                            <th>Estado Civil</th>
-                                        </tr>
-                                        {personas.map((mat) => (
-                                            <tr key={mat.id}>
-                                                <td>{mat.id}</td>
-                                                <td>{mat.CURP}</td>
-                                                <td>{mat.nombre}</td>
-                                                <td>{mat.apellidoP}</td>
-                                                <td>{mat.apellidoM}</td>
-                                                <td>{mat.sexo}</td>
-                                                <td>{mat.estadoCivil}</td>
+                        <div className="dashboard-container">
+                            <div className="dashboard-header">
+                                <h1>Bienvenido, {user.name} {user.lastName}</h1>
+                                <p>Panel principal del sistema de registro civil</p>
+                            </div>
+                        </div>
+
+                        <div className="starts-grid">
+                            <div className="stat-card">
+                                <h3>{personas.length}</h3>
+                                <p>Personas registradas</p>
+                            </div>
+                            <div className="stat-card">
+                                <h3>{personas.filter(p => p.estadoCivil === 'SOLTERO').length}</h3>
+                                <p>Solteros</p>
+                            </div>
+                            <div className="stat-card">
+                                <h3>{personas.filter(p => p.estadoCivil === 'CASADO').length}</h3>
+                                <p>Casados</p>
+                            </div>
+                        </div>
+                        
+                        <div className="table-card">
+                            <h2 className="text-center">Registro de Personas</h2>
+                            {personas.length > 0 ? (
+                                <div className="table-responsive">
+                                    <table className="table table-hover aling-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>CURP</th>
+                                                <th>Nombre</th>
+                                                <th>Apellido Paterno</th>
+                                                <th>Apellido Materno</th>
+                                                <th>Sexo</th>
+                                                <th>Estado Civil</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <div>
-                                <h1>No existen registros aún...</h1>
-                            </div>
-                        )}
+                                        </thead>
+                                        <tbody>
+                                            {personas.map((p) => (
+                                                <tr key={p.id}>
+                                                    <td>{p.id}</td>
+                                                    <td>{p.CURP}</td>
+                                                    <td>{p.nombre}</td>
+                                                    <td>{p.apellidoPaterno}</td>
+                                                    <td>{p.apellidoMaterno}</td>
+                                                    <td>{p.sexo}</td>
+                                                    <td>{p.estadoCivil}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p>No existen registros aún.</p>
+                            )}
+                        </div>
                     </div>
             }
         </>

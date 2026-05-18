@@ -1,18 +1,17 @@
 const { pool } = require('../db.js');
 
-//const buscar = 'SELECT * FROM personas WHERE personas.CURP = ?;';
-const buscar = 'SELECT * FROM personas WHERE personas.CURP IN (?,?);';
-const regPareja = 'INSERT INTO parejas(idEsposo, idEsposa) VALUES (?,?);';
-const actuEstadoCv = 'UPDATE personas SET personas.estadoCivil = "Casado" WHERE personas.id IN (?, ?);';
+const buscarPersonas = 'SELECT * FROM personas WHERE CURP IN (?, ?);';
+const buscarMatrimonio = 'SELECT id FROM matrimonios WHERE (persona_1_id = ? AND persona_2_id = ?) OR (persona_1_id = ? AND persona_2_id = ?);';
+const insertarMatrimonio = 'INSERT INTO matrimonios (persona_1_id, persona_2_id, fecha_matrimonio, created_by) values (?, ?, CURDATE(), ?);';
+const actualizarEstadoCivil = 'UPDATE personas SET estadoCivil = "Casado" WHERE id IN (?, ?);';
 
 const busqueda = async (req, res) => {
     try {
         const { CURP1, CURP2 } = req.params;
 
-        const [busq] = await pool.query(buscar, [CURP1, CURP2]);
+        const [busq] = await pool.query(buscarPersonas, [CURP1, CURP2]);
         console.log(busq);
         
-
         return res.json(busq);
 
     } catch (error) {
@@ -23,34 +22,78 @@ const busqueda = async (req, res) => {
 }
 
 const casar = async (req, res) => {
+    const connection = await pool.getConnection();
+
     try {
         const { id1, id2 } = req.params;
-        const [row] = await pool.query(regPareja, [id1, id2]);
+        const created_by = req.user.id;
 
-        if (row.affectedRows > 0) {
-            const [result] = await pool.query(actuEstadoCv, [id1, id2]);
-            
-            if(result.affectedRows === 0){
-                res.status(409).json({
-                    message: "Error DB... No se actualizaron los datos..."
-                })
-            }
-
-            res.status(200).json({
-                message: "Peticion realizada..."
-            });
-
-        } else {
-            res.status(409).json({
-                message: "Error DB... Datos no insertados..."
+        if(id1 === id2){
+            return res.status(400).json({
+                message: 'Una persona no se puede casar consigo misma'
             });
         }
 
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Something goes wrong'
+        await connection.beginTransaction();
+
+        const [personas] = await connection.query(
+            'SELECT * FROM personas WHERE id IN (?, ?);', [id1, id2]
+        );
+
+        if(personas.length !== 2){
+            await connection.rollback();
+            return res.status(405).json({
+                message: 'No se encontraron ambas personas'
+            });
+        }
+
+        const [persona1, persona2] = personas;
+
+        if(persona1.edad < 18 || persona2.edad < 18){
+            await connection.rollback();
+            return res.status(400).json({
+                message: 'Ambas personas deben de ser mayores de edad'
+            });
+        }
+
+        // Validad estado civil
+        if(persona1.estadoCivil === 'Casado' || persona2.estadoCivil === 'Casado'){
+            await connection.rollback();
+            return res.status(409).json({
+                message: 'Una de las personas ya está casada'
+            });
+        }
+
+        // Validad duplicado
+        const [matrimonioExiste] = await connection.query('SELECT iD FROM matrimonios WHERE (persona_1_id = ? AND persona_2_id = ?) OR (persona_1_id = ? AND persona_2_id = ?);', [id1, id2, id2, id1]);
+
+        if(matrimonioExiste.length > 0){
+            await connection.rollback();
+            return req.status(409).json({
+                message: 'Este matrimonio y existe'
+            });
+        }
+
+        // Insertar matrimonio
+        await connection.query(insertarMatrimonio, [id1, id2, created_by]);
+        await connection.query('UPDATE personas SET estadoCivil = "Casado" WHERE id IN (?, ?)', [id1, id2]);
+        await connection.commit();
+
+        return res.status(201).json({
+            message: 'Matrimonio registrado correctamente'
         });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+        
+        return res.status(500).json({
+            message: 'Error interno del servidor'
+        });
+    } finally {
+        connection.release();
     }
+
 }
 
 const generarCRUP = async (req, res) => {

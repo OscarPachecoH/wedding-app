@@ -25,106 +25,69 @@ const Login = ({ setUser }) => {
 
     const inicio = async (e) => {
         e.preventDefault();
-        if (sesion.user !== '' && sesion.password !== '') {
 
-            await axios.post('http://localhost:9000/inicio', sesion)
-                .then(({ data }) => {
-                    if (data.user === "") {
-                        alert("No hay registro con este usuario")
-                    } else {
-                        setUser(data);
-                        //alert();
-                        navigate('/dashboard');
-                    }
-                })
-        } else {
-            alert('Error... Los campos estan vacios');
+        if(!sesion.user || !sesion.password){
+            alert('Error... Los campos están vacios');
+            return
+        }
+
+        try {
+            const { data } = await axios.post('http://localhost:9000/inicio', sesion);
+
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            setUser(data.user);
+
+            navigate('/dashboard')
+        } catch (error) {
+            alert(
+                error.response?.data?.message ||
+                'Error al iniciar sesión...'
+            )
         }
     }
 
     return (
-        <div className="body">
-            <div className="login-box">
-                <img src="https://cdn-icons-png.flaticon.com/512/13367/13367664.png" className="avatar" width={'250px'} alt="Iglesia" />
-                <h1>Inicio de sesión</h1>
-                <form onSubmit={inicio}>
-                    <label htmlFor="">Usuario</label>
-                    <input 
-                        type="text" 
-                        placeholder="Ingresa la contraseña" 
-                        id="user"
-                        name="user"
-                        value={sesion.user}
-                        onChange={inputSesionChange}
-                    />
-                    <label htmlFor="">Contraseña</label>
-                    <input 
-                        type="password" 
-                        placeholder="Ingresa la contraseña" 
-                        id="contraseña"
-                        name="password"
-                        value={sesion.password}
-                        onChange={inputSesionChange}
-                    />
-                    <input type="submit" value="log in" />
-                    <p>Si no tienes cuenta, contacta con el administrador</p>
-                </form>
-            </div>
-        </div>
-    );
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <img src="https://cdn-icons-png.flaticon.com/512/13367/13367664.png" alt="logi" />
+                    <h1>Wedding App</h1>
+                </div>
 
-    /*return (
-        <div className="body">
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-lg-5 col-mb-6 form-container">
-                        <div className="col-lg-8 col-md-12 col-sm-9 col-xs-12 form-box text-center">
-                            <div className="logo mt-5 mb-3">
-                                <img src="https://cdn-icons-png.flaticon.com/512/13367/13367664.png" width={'250px'} alt="Iglesia" />
-                            </div>
-                            <div className="heading mb-3">
-                                <h4>Inicio de sesión</h4>
-                            </div>
-                            <form onSubmit={inicio}>
-                                <div className="form-input">
-                                    <span><FaRegUser /></span>
-                                    <input
-                                        type="text"
-                                        id="user"
-                                        placeholder="Nombre de Usuario"
-                                        name="user"
-                                        value={sesion.user}
-                                        onChange={inputSesionChange}
-                                    />
-                                </div>
-                                <div className="form-input">
-                                    <span><FaLock /></span>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        id="contraseña"
-                                        name="password"
-                                        placeholder="Contraseña"
-                                        value={sesion.password}
-                                        onChange={inputSesionChange}
-                                    />
-                                    <span className="password-toggle" 
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        >
-                                            {showPassword ? <FaEyeSlash/> : <FaEye/>}
-                                        </span>
-                                </div>
-                                <div className="text-left">
-                                    <button className="btn" type="submit">Entrar</button>
-                                </div>
-                            </form>
-                        </div>
+                <form className="login-form" onSubmit={inicio}>
+                    <div>
+                        <label htmlFor="">Usuario</label>
+                        <input
+                            type="text"
+                            placeholder="Ingresa tu usuario"
+                            name="user"
+                            value={sesion.user}
+                            onChange={inputSesionChange}
+                        />
                     </div>
-                    <div className="col-lg-7 col-md-6 d-none d-md-block image-container"></div>
+                    <div>
+                        <label htmlFor="">Contraseña</label>
+                        <input
+                            type="password"
+                            placeholder="Ingresa tu contraseña"
+                            name="password"
+                            value={sesion.password}
+                            onChange={inputSesionChange}
+                        />
+                    </div>
+                    <button type="submit" className="login-button">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <div className="login-footer">
+                    Contacta al administrador si no tienes acceso
                 </div>
             </div>
         </div>
-    );*/
-
+    );
 }
 
 export default Login;

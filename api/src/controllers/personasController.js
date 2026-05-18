@@ -1,7 +1,7 @@
 const { pool } = require('../db.js');
 
 const mostrar = 'SELECT * FROM personas'
-const regPersona = 'INSERT INTO personas(CURP, nombre, apellidoP, apellidoM, edad, sexo, fecha, estadoCivil) VALUES (?,?,?,?,?,?,?,?);';
+const regPersona = 'INSERT INTO personas(CURP, nombre, apellidoPaterno, apellidoMaterno, edad, sexo, fechaNacimiento, estadoCivil, created_by) VALUES (?,?,?,?,?,?,?,?,?);';
 const borPersona = 'DELETE FROM personas WHERE id = ?;';
 
 const mostPersonas = async (req, res) => {
@@ -15,10 +15,13 @@ const mostPersonas = async (req, res) => {
 }
 
 const regisPersonas = async (req, res) => {
-    try{
+    try {
         const { CURP, nombre, apellidoP, apellidoM, edad, sexo, fechaN, estadoCivil } = req.body;
-        const values = [CURP, nombre, apellidoP, apellidoM, edad, sexo, fechaN, estadoCivil];
-        
+
+        const created_by = req.user.id;
+
+        const values = [CURP, nombre, apellidoP, apellidoM, edad, sexo, fechaN, estadoCivil, created_by];
+
         const [rows] = await pool.query(regPersona, values);
 
         if (rows.insertId != 0) {
@@ -30,18 +33,20 @@ const regisPersonas = async (req, res) => {
                 message: 'No se realizo el registro...'
             });
         }
-
-    }catch(error){
+    } catch (error) {
         return res.status(500).json({
             message: 'Something goes wrong'
         });
     }
+
+
+
 }
 
 const borrarPersonas = async (req, res) => {
-    try{
-        const [result] = await pool.query(borPersona,[req.params.id]);
-        if(result.affectedRows <= 0){
+    try {
+        const [result] = await pool.query(borPersona, [req.params.id]);
+        if (result.affectedRows <= 0) {
             return res.status(404).json({
                 message: 'Registro no encontrado...'
             });
@@ -49,7 +54,7 @@ const borrarPersonas = async (req, res) => {
         res.status(200).json({
             message: 'Registro eliminado...'
         });
-    }catch(error){
+    } catch (error) {
         return res.status(500).json({
             message: 'Something goes wrong'
         });

@@ -1,198 +1,98 @@
-/*.image-container{
-    background: url('https://www.euroresidentes.com/suenos/img_suenos/iglesia-suenos-euroresidentes.jpg') center no-repeat;
-    background-size: cover;
-    height: 100vh;
-}
-
-.form-container{
-    background-color: #d99561;
+.login-container {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
+
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.55), 
+    rgba(0, 0, 0, 0.55)), 
+    url('https://cdn0.bodas.net/article-real-wedding/277/original/1920/jpg/1993591.webp');
+
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
 }
 
-.form-box{
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.25);
+    color: white;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header img {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.login-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
+    gap: 18px;
 }
 
-.form-box h4{
-    font-weight: bold;
-    color: #ffffff;
+.login-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
-.form-box .form-input {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.form-box .form-input input {
+.login-form input {
     width: 100%;
-    height: 40px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    outline: none;
-    background: white;
-    padding-left: 45px; Espacio para el ícono izquierdo 
-    padding-right: 45px; Espacio para el ícono derecho 
-}
-
-/* Estiliza los íconos dentro del input
-.form-box .form-input span {
-    margin-left: 20px;
-    position: absolute;
-    transform: translateY(-50%);
-    color: #777;
-}
-
-/* Ícono del candado (izquierda)
-.form-box .form-input .lock-icon {
-    left: 15px;
-}
-
-/* Ícono de mostrar/ocultar contraseña (derecha)
-.form-box .form-input .password-toggle {
-    right: 15px;
-    cursor: pointer;
-}
-
-
-.form-box .form-input input::placeholder{
-    padding-left: 0px;
-}
-
-.form-box .form-input input:focus,
-.form-box .form-input input:valid{
-    border-bottom: 2px solid #1c4276;
-}
-
-.form-box input[type="checkbox"]:not(:checked) + label::before{
-    background: transparent;
-    border: 2px solid #fff;
-    width: 15px;
-    height: 15px;
-}
-
-.form-box .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
-    background-color: #dc3545;
-    border: 0px;
-}
-
-.form-box button[type="submit"]{
+    padding: 14px;
     border: none;
-    cursor: pointer;
-    width: 150px;
-    height: 40px;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #000;
-    font-weight: bold;
-    transition: 0.5s;
-}
-
-.form-box button[type="submit"]:hover{
-    background: #eed5b5;
-    color: rgb(0, 0, 0);
-    -webkit-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
-    -moz-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
-    box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
-}*/
-
-.body {
-    margin: 0;
-    padding: 0;
-    background: url('https://cdn0.bodas.net/article-real-wedding/277/original/1920/jpg/1993591.webp') no-repeat center;
-    background-size: cover;
-    font-family: sans-serif;
-    height: 100vh;
-}
-
-.login-box {
-    width: 320px;
-    height: 420px;
-    background: #00000079;
-    color: #fff;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
-    padding: 70px 30px;
-}
-
-.login-box .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    position: absolute;
-    top: -50px;
-    left: calc(50% - 50px);
-}
-
-.login-box h1 {
-    margin: 0;
-    padding: 0 0 20px;
-    text-align: center;
-    font-size: 22px;
-}
-
-.login-box label {
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
-    display: block;
-}
-
-.login-box input {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.login-box input[type="text"], .login-box input[type="password"] {
-    border: none;
-    border-bottom: 1px solid #fff;
-    background: transparent;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
     outline: none;
-    height: 40px;
-    color: #fff;
+    transition: var(--transition);
+}
+
+.login-form input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.login-form input:focus{
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.login-button {
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: var(--primary-color);
+    color: white;
     font-size: 16px;
-}
-
-.login-box input[type="submit"] {
-    border: none;
-    outline: none;
-    height: 40px;
-    background: #b80f22;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 20px;
-}
-
-.login-box input[type="submit"] {
-    border: none;
-    outline: none;
-    height: 40px;
-    background-color: #b80f22;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 20px;
-}
-
-.login-box input[type="submit"]:hover {
+    font-weight: 600;
     cursor: pointer;
-    background: #ffc107;
-    color: #000;
+    transition: var(--transition);
 }
 
-.login-box a {
-    text-decoration: none;
-    font-size: 12px;
-    line-height: 20px;
-    color: darkgray;
+.login-button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
-.login-box a:hover {
-    color: #fff;
+.login-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
 }
